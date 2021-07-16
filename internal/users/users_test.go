@@ -26,7 +26,7 @@ func TestLoadUsers(t *testing.T) {
 		{
 			test:         "InvalidUsersFile1",
 			testFilePath: "test_files/invalid_json_Users.json",
-			err:          errors.New("json: cannot unmarshal string into Go struct field User.shared of type int"),
+			err:          errors.New("json: cannot unmarshal string into Go struct field User.shared of type bool"),
 		},
 		{
 			test:         "GoodUsersFile",

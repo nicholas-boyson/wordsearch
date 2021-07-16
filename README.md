@@ -41,3 +41,13 @@ Approach Idea 2:
 - Search interface options to search or display list of search field options
 - on search the user is presented with Search on users, Search on tickets, or Search on Organizations
 - Search on slice
+
+## Build for Windows (creates an exe)
+```
+go build .
+```
+
+## Running unit tests
+```
+go test -v ./...
+```
