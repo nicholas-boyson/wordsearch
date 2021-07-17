@@ -3,11 +3,13 @@ package search
 import (
 	"strconv"
 
+	"github.com/nicholas-boyson/wordsearch/internal/display"
 	"github.com/nicholas-boyson/wordsearch/internal/organizations"
 	"github.com/nicholas-boyson/wordsearch/internal/tickets"
 	"github.com/nicholas-boyson/wordsearch/internal/users"
 )
 
+//Search search definition
 type Search struct {
 	Ident         string
 	Group         string
@@ -17,12 +19,14 @@ type Search struct {
 	Users         []users.User
 }
 
+// SearchResult search result definition
 type SearchResult struct {
 	Organizations []organizations.Organization
 	Tickets       []tickets.Ticket
 	Users         []users.User
 }
 
+// SearchData search across all data sources linking on organization id when single result or search by organization id
 func SearchData(s Search) (result SearchResult) {
 	switch s.Group {
 	case "Organizations":
@@ -61,5 +65,26 @@ func ValidSearchTerms(group string, ident string) bool {
 		return users.ValidSearchTerms(ident)
 	default:
 		return false
+	}
+}
+
+func SearchResultDisplay(group string, sr SearchResult) {
+	switch group {
+	case "Organizations":
+		display.DisplayOrganizations(sr.Organizations, sr.Tickets, sr.Users)
+	case "Tickets":
+		if len(sr.Organizations) > 0 {
+			display.DisplayTickets(sr.Tickets, sr.Organizations[0])
+		} else {
+			display.DisplayTickets(sr.Tickets, organizations.Organization{})
+		}
+	case "Users":
+		if len(sr.Organizations) > 0 {
+			display.DisplayUsers(sr.Users, sr.Organizations[0])
+		} else {
+			display.DisplayUsers(sr.Users, organizations.Organization{})
+		}
+	default:
+		display.NoResultFound()
 	}
 }

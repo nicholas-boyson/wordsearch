@@ -1,6 +1,12 @@
 package display
 
-import "fmt"
+import (
+	"fmt"
+
+	"github.com/nicholas-boyson/wordsearch/internal/organizations"
+	"github.com/nicholas-boyson/wordsearch/internal/tickets"
+	"github.com/nicholas-boyson/wordsearch/internal/users"
+)
 
 // Welcome display welcome message
 func Welcome() {
@@ -86,4 +92,61 @@ func InvalidSearchTerm() {
 }
 func invalidSearchTerm() string {
 	return "Invalid search term"
+}
+
+// DisplayOrganizations generate organization search result display
+func DisplayOrganizations(orgList []organizations.Organization, ticketList []tickets.Ticket, userList []users.User) {
+	if len(orgList) > 0 {
+		if len(orgList) == 1 {
+			fmt.Println(displayOrganizationDetails(orgList[0], ticketList, userList))
+		} else {
+			fmt.Println(displayOrganizationList(orgList))
+		}
+	} else {
+		NoResultFound()
+	}
+}
+func displayOrganizationList(orgList []organizations.Organization) string {
+	return ""
+}
+func displayOrganizationDetails(org organizations.Organization, ticketList []tickets.Ticket, userList []users.User) string {
+	return ""
+}
+
+// DisplayTickets generate tickets search result display
+func DisplayTickets(ticketList []tickets.Ticket, org organizations.Organization) {
+	if len(ticketList) > 0 {
+		if len(ticketList) == 1 {
+			fmt.Println(displayTicketDetails(ticketList[0], org))
+		} else {
+			fmt.Println(displayTicketsList(ticketList, org))
+		}
+	} else {
+		NoResultFound()
+	}
+}
+func displayTicketsList(ticketList []tickets.Ticket, org organizations.Organization) string {
+	return ""
+}
+func displayTicketDetails(ticket tickets.Ticket, org organizations.Organization) string {
+	return ""
+}
+
+// DisplayUsers generate users search result display
+func DisplayUsers(userList []users.User, org organizations.Organization) {
+	if len(userList) > 0 {
+		if len(userList) == 1 {
+			fmt.Println(displayUserDetails(userList[0], org))
+		} else {
+			fmt.Println(displayUsersList(userList, org))
+		}
+	} else {
+		NoResultFound()
+	}
+}
+func displayUsersList(userList []users.User, org organizations.Organization) string {
+	return ""
+}
+func displayUserDetails(user users.User, org organizations.Organization) string {
+	return ""
 }

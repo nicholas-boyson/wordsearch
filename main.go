@@ -80,7 +80,7 @@ func process(scanner *bufio.Scanner) {
 						if scanner.Text() != "quit" {
 							searchRequest.Value = scanner.Text()
 							searchResult := search.SearchData(searchRequest)
-							fmt.Println(searchResult)
+							search.SearchResultDisplay(searchRequest.Group, searchResult)
 						} else {
 							quit = true
 						}
