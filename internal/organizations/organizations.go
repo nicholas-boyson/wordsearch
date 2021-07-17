@@ -57,54 +57,55 @@ func LoadOrganizations(testFilePath string) ([]Organization, error) {
 }
 
 //SearchOrganizations function to search over all organizations based on ident and value provided
-func SearchOrganizations(organizations []Organization, ident string, value string) Organization {
+func SearchOrganizations(organizations []Organization, ident string, value string) (organizationList []Organization) {
 	for _, org := range organizations {
 		switch ident {
 		case "_id":
 			if strconv.Itoa(org.Id) == value {
-				return org
+				organizationList = append(organizationList, org)
 			}
 		case "url":
 			if org.URL == value {
-				return org
+				organizationList = append(organizationList, org)
 			}
 		case "external_id":
 			if org.ExternalId == value {
-				return org
+				organizationList = append(organizationList, org)
 			}
 		case "name":
 			if org.Name == value {
-				return org
+				organizationList = append(organizationList, org)
 			}
 		case "domain_names":
 			for _, dn := range org.DomainNames {
 				if dn == value {
-					return org
+					organizationList = append(organizationList, org)
 				}
 			}
 		case "created_at":
 			if org.CreatedAt == value {
-				return org
+				organizationList = append(organizationList, org)
 			}
 		case "details":
 			if org.Details == value {
-				return org
+				organizationList = append(organizationList, org)
 			}
 		case "shared_tickets":
 			if strconv.FormatBool(org.SharedTickets) == value {
-				return org
+				organizationList = append(organizationList, org)
 			}
 		case "tags":
 			for _, tag := range org.Tags {
 				if tag == value {
-					return org
+					organizationList = append(organizationList, org)
 				}
 			}
 		default:
-			return Organization{}
+			// Invalid ident so return
+			return
 		}
 	}
-	return Organization{}
+	return
 }
 
 // ValidSearchTerms checks an ident against a list of valid options and returns true if it exists
