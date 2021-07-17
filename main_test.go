@@ -4,6 +4,8 @@ import (
 	"bufio"
 	"bytes"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestProcess(t *testing.T) {
@@ -27,6 +29,7 @@ func TestProcess(t *testing.T) {
 
 		var scanner = bufio.NewScanner(&stdin)
 
-		process(scanner)
+		err := process(scanner)
+		assert.Nil(t, err)
 	}
 }

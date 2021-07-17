@@ -35,12 +35,15 @@ func init() {
 	}
 }
 
-func process(scanner *bufio.Scanner) {
+func process(scanner *bufio.Scanner) error {
 	display.Welcome()
 	quit := false
 	for !quit {
 		display.SelectSearchOptions()
 		scanner.Scan()
+		if err := scanner.Err(); err != nil {
+			return fmt.Errorf("reading input: %s", err)
+		}
 		switch scanner.Text() {
 		case "1":
 			// New search
@@ -53,6 +56,9 @@ func process(scanner *bufio.Scanner) {
 			for !knownGroup {
 				display.SelectGroupOptions()
 				scanner.Scan()
+				if err := scanner.Err(); err != nil {
+					return fmt.Errorf("reading input: %s", err)
+				}
 				knownGroup = true
 				switch scanner.Text() {
 				case "1":
@@ -72,11 +78,17 @@ func process(scanner *bufio.Scanner) {
 			if !quit {
 				display.EnterSearchTerm()
 				scanner.Scan()
+				if err := scanner.Err(); err != nil {
+					return fmt.Errorf("reading input: %s", err)
+				}
 				if scanner.Text() != "quit" {
 					if search.ValidSearchTerms(searchRequest.Group, scanner.Text()) {
 						searchRequest.Ident = scanner.Text()
 						display.EnterSearchValue()
 						scanner.Scan()
+						if err := scanner.Err(); err != nil {
+							return fmt.Errorf("reading input: %s", err)
+						}
 						if scanner.Text() != "quit" {
 							searchRequest.Value = scanner.Text()
 							searchResult := search.SearchData(searchRequest)
@@ -98,9 +110,17 @@ func process(scanner *bufio.Scanner) {
 		default:
 		}
 	}
+	if err := scanner.Err(); err != nil {
+		return fmt.Errorf("reading input: %s", err)
+	}
+	return nil
 }
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
-	process(scanner)
+	err := process(scanner)
+	if err != nil {
+		fmt.Printf("Hit an input error: %s", err.Error())
+		os.Exit(1)
+	}
 }
