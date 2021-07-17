@@ -22,6 +22,7 @@ The applications supported search fields:
 | tags            |                 |                |
 | suspended       |                 |                |
 | role            |                 |                |
+
 Users and tickets are associated to an organization by the organization_id field. 
 When performing a search by the organization group the user will be presented with the
 details of the organization record plus a list of associated tickets and users.
