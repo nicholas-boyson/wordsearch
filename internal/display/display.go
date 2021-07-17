@@ -153,12 +153,12 @@ func DisplayTickets(ticketList []tickets.Ticket, org organizations.Organization)
 }
 func displayTicketsList(ticketList []tickets.Ticket, org organizations.Organization) string {
 	result := "Multipe tickets found\n"
-	result = result + fmt.Sprintf("%-50s|%-25s|%-100s\n", "Ticket Id", "Ticket subject", "Ticket Description")
-	result = result + fmt.Sprintf("%-50s|%-25s|%-100s\n", strings.Repeat("-", 50), strings.Repeat("-", 25), strings.Repeat("-", 100))
+	result = result + fmt.Sprintf("%-50s|%-50s|%-100s\n", "Ticket Id", "Ticket subject", "Ticket Description")
+	result = result + fmt.Sprintf("%-50s|%-50s|%-100s\n", strings.Repeat("-", 50), strings.Repeat("-", 50), strings.Repeat("-", 100))
 	for _, ticket := range ticketList {
-		result = result + fmt.Sprintf("%-50s|%-25s|%-100s\n", ticket.Id, ticket.Subject, ticket.Description)
+		result = result + fmt.Sprintf("%-50s|%-50s|%-100s\n", ticket.Id, ticket.Subject, ticket.Description)
 	}
-	result = result + fmt.Sprintf("%-50s|%-25s|%-100s\n", strings.Repeat("-", 50), strings.Repeat("-", 25), strings.Repeat("-", 100))
+	result = result + fmt.Sprintf("%-50s|%-50s|%-100s\n", strings.Repeat("-", 50), strings.Repeat("-", 50), strings.Repeat("-", 100))
 	if org.Id != 0 {
 		result = result + displayOrganizationDetails(org, nil, nil)
 	}

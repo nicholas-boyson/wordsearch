@@ -1,6 +1,6 @@
 # wordsearch
-Application to perform a search by user, tickets or orginazation.
-Supported search fields
+Application to perform multiple searchs across a data source of users, tickets and orginazations.
+The applications supported search fields:
 | Users           | Tickets         | Organizations  |
 |-----------------|-----------------|----------------|
 | _id             | _id             | _id            |
@@ -22,6 +22,17 @@ Supported search fields
 | tags            |                 |                |
 | suspended       |                 |                |
 | role            |                 |                |
+Users and tickets are associated to an organization by the organization_id field. 
+When performing a search by the organization group the user will be presented with the
+details of the organization record plus a list of associated tickets and users.
+When performing a search by the ticket group the user will be presented with the details of 
+that ticket, and the details of the linked organization.
+When performing a search by the user group the user will be presented with the details of the
+user, and the details of the linked organization.
+For any group if there is more than one result found the user will be presented with a list of
+the found information plus additional details to help refine the search.
+No results found will result in a message back to the user and return them to the start of the search.
+You can exit the application anytime by entering 'quit'
 
 ## Assumptions
 Every field can be used in the search.
@@ -47,6 +58,10 @@ go build .
 
 ## Running unit tests
 ```
+// run all tests from main directory and subdirectories
 go test ./...
+// run all tests from the main directory and subdirectories with more information on the tests
 go test -v ./...
+// run all benchmark tests from the main directory and across the subdirectoris.
+go test -bench . ./...
 ```

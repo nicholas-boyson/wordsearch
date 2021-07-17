@@ -585,13 +585,13 @@ func TestSearchTickets(t *testing.T) {
 
 func BenchmarkTicketsLoad(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, err := LoadTickets("")
+		_, err := LoadTickets("../source_data/tickets.json")
 		assert.Nil(b, err)
 	}
 }
 
 func BenchmarkTicketsLoadThenSearch(b *testing.B) {
-	tickets, err := LoadTickets("")
+	tickets, err := LoadTickets("../source_data/tickets.json")
 	assert.Nil(b, err)
 	for i := 0; i < b.N; i++ {
 		_ = SearchTickets(tickets, "organization_id", "125")
