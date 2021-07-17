@@ -12,6 +12,8 @@ import (
 	"github.com/nicholas-boyson/wordsearch/internal/users"
 )
 
+const exitSearch = "quit"
+
 var orgList []organizations.Organization
 var ticketList []tickets.Ticket
 var userList []users.User
@@ -68,12 +70,12 @@ func process(scanner *bufio.Scanner) error {
 				// repeat if group is unknown or input is quit
 				switch scanner.Text() {
 				case "1":
-					searchRequest.Group = "Users"
+					searchRequest.Group = search.SearchGroupUsers
 				case "2":
-					searchRequest.Group = "Tickets"
+					searchRequest.Group = search.SearchGroupTickets
 				case "3":
-					searchRequest.Group = "Organizations"
-				case "quit":
+					searchRequest.Group = search.SearchGroupOrganizations
+				case exitSearch:
 					// quit the search
 					quit = true
 				default:
@@ -89,7 +91,7 @@ func process(scanner *bufio.Scanner) error {
 					return fmt.Errorf("reading input: %s", err)
 				}
 
-				if scanner.Text() != "quit" {
+				if scanner.Text() != exitSearch {
 					// if the input is not quit validate search term based on search group
 					if search.ValidSearchTerms(searchRequest.Group, scanner.Text()) {
 						searchRequest.Ident = scanner.Text()
@@ -100,7 +102,7 @@ func process(scanner *bufio.Scanner) error {
 							return fmt.Errorf("reading input: %s", err)
 						}
 
-						if scanner.Text() != "quit" {
+						if scanner.Text() != exitSearch {
 							// if the input is not quit then perform search
 							searchRequest.Value = scanner.Text()
 							searchResult := search.SearchData(searchRequest)
@@ -119,7 +121,7 @@ func process(scanner *bufio.Scanner) error {
 		case "2":
 			// display a list of searchable field to the user
 			display.ListSearchableFields()
-		case "quit":
+		case exitSearch:
 			// exit search option
 			quit = true
 		default:

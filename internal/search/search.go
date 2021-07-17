@@ -9,6 +9,15 @@ import (
 	"github.com/nicholas-boyson/wordsearch/internal/users"
 )
 
+const (
+	//SearchGroupUsers "Users"
+	SearchGroupUsers = "Users"
+	//SearchGroupTickets "Tickets"
+	SearchGroupTickets = "Tickets"
+	//SearchGroupOrganizations "Organizations"
+	SearchGroupOrganizations = "Organizations"
+)
+
 //Search search definition
 type Search struct {
 	Ident         string
@@ -29,20 +38,20 @@ type SearchResult struct {
 // SearchData search across all data sources linking on organization id when single result or search by organization id
 func SearchData(s Search) (result SearchResult) {
 	switch s.Group {
-	case "Organizations":
+	case SearchGroupOrganizations:
 		result.Organizations = organizations.SearchOrganizations(s.Organizations, s.Ident, s.Value)
 		if len(result.Organizations) == 1 {
 			// Only search when there is a single organization returned
 			result.Tickets = tickets.SearchTickets(s.Tickets, "organization_id", strconv.Itoa(result.Organizations[0].Id))
 			result.Users = users.SearchUsers(s.Users, "organization_id", strconv.Itoa(result.Organizations[0].Id))
 		}
-	case "Tickets":
+	case SearchGroupTickets:
 		result.Tickets = tickets.SearchTickets(s.Tickets, s.Ident, s.Value)
 		if len(result.Tickets) == 1 || (len(result.Tickets) > 0 && s.Ident == "organization_id") {
 			// Only link organization details when there is a single ticket returned or the search was on the org id
 			result.Organizations = organizations.SearchOrganizations(s.Organizations, "_id", strconv.Itoa(result.Tickets[0].OrganizationId))
 		}
-	case "Users":
+	case SearchGroupUsers:
 		result.Users = users.SearchUsers(s.Users, s.Ident, s.Value)
 		if len(result.Users) == 1 || (len(result.Users) > 0 && s.Ident == "organization_id") {
 			// Only link organization details when there is a single user returned or the search was on the org id
@@ -57,11 +66,11 @@ func SearchData(s Search) (result SearchResult) {
 // ValidSearchTerms return if ident is valid for a group
 func ValidSearchTerms(group string, ident string) bool {
 	switch group {
-	case "Organizations":
+	case SearchGroupOrganizations:
 		return organizations.ValidSearchTerms(ident)
-	case "Tickets":
+	case SearchGroupTickets:
 		return tickets.ValidSearchTerms(ident)
-	case "Users":
+	case SearchGroupUsers:
 		return users.ValidSearchTerms(ident)
 	default:
 		return false
@@ -71,15 +80,15 @@ func ValidSearchTerms(group string, ident string) bool {
 // SearchResultDisplay determines the display based on group and search results
 func SearchResultDisplay(group string, sr SearchResult) {
 	switch group {
-	case "Organizations":
+	case SearchGroupOrganizations:
 		display.DisplayOrganizations(sr.Organizations, sr.Tickets, sr.Users)
-	case "Tickets":
+	case SearchGroupTickets:
 		if len(sr.Organizations) > 0 {
 			display.DisplayTickets(sr.Tickets, sr.Organizations[0])
 		} else {
 			display.DisplayTickets(sr.Tickets, organizations.Organization{})
 		}
-	case "Users":
+	case SearchGroupUsers:
 		if len(sr.Organizations) > 0 {
 			display.DisplayUsers(sr.Users, sr.Organizations[0])
 		} else {

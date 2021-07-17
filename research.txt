@@ -1,3 +1,18 @@
+Approach Idea 1:
+- Search interface options to search or display list of search field options
+- on search the user is presented with Search on users, Search on tickets, or Search on Organizations
+- Read the file the user selected e.g. Users and search the file based on search input field and store the found information and pull out the organisation id.
+- Then read the file of the related information i.e. organisation
+
+Pros: code is simple to follow and maintain. 
+Cons: for each search will need to constantly read the files.
+
+Approach Idea 2:
+- Load each source file into slices of structs
+- Search interface options to search or display list of search field options
+- on search the user is presented with Search on users, Search on tickets, or Search on Organizations
+- Search on slice
+
 Running tool: C:\Program Files\Go\bin\go.exe test -benchmem -run=^$ -coverprofile=C:\Users\NICHOL~1\AppData\Local\Temp\vscode-gofh5AR9\go-code-cover -bench . github.com/nicholas-boyson/wordsearch/internal/organizations
 
 goos: windows

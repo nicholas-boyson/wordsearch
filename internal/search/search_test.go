@@ -9,6 +9,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestSearchGroupConsts(t *testing.T) {
+	assert.Equal(t, "Users", SearchGroupUsers)
+	assert.Equal(t, "Tickets", SearchGroupTickets)
+	assert.Equal(t, "Organizations", SearchGroupOrganizations)
+}
+
 func TestValidSearchTerms(t *testing.T) {
 	tests := []struct {
 		test   string
