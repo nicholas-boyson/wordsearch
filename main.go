@@ -73,15 +73,19 @@ func process(scanner *bufio.Scanner) {
 				display.EnterSearchTerm()
 				scanner.Scan()
 				if scanner.Text() != "quit" {
-					searchRequest.Ident = scanner.Text()
-					display.EnterSearchValue()
-					scanner.Scan()
-					if scanner.Text() != "quit" {
-						searchRequest.Value = scanner.Text()
-						searchResult := search.SearchData(searchRequest)
-						fmt.Println(searchResult)
+					if search.ValidSearchTerms(searchRequest.Group, scanner.Text()) {
+						searchRequest.Ident = scanner.Text()
+						display.EnterSearchValue()
+						scanner.Scan()
+						if scanner.Text() != "quit" {
+							searchRequest.Value = scanner.Text()
+							searchResult := search.SearchData(searchRequest)
+							fmt.Println(searchResult)
+						} else {
+							quit = true
+						}
 					} else {
-						quit = true
+						display.InvalidSearchTerm()
 					}
 				} else {
 					quit = true

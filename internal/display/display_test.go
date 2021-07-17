@@ -63,3 +63,8 @@ func TestNoResultFound(t *testing.T) {
 	noResultMsg := noResultFound()
 	assert.Equal(t, "No results found", noResultMsg)
 }
+
+func TestInvalidSearchTerm(t *testing.T) {
+	msg := invalidSearchTerm()
+	assert.Equal(t, "Invalid search term", msg)
+}

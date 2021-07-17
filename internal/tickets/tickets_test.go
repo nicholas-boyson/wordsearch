@@ -105,7 +105,6 @@ func TestValidSearchTerms(t *testing.T) {
 
 	for _, tt := range tests {
 		result := ValidSearchTerms(tt.searchTerm)
-		assert.IsType(t, tt.result, result)
 		assert.Equal(t, tt.result, result)
 	}
 }

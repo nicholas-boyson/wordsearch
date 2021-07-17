@@ -45,13 +45,16 @@ func SearchData(s Search) (result SearchResult) {
 	return
 }
 
+// ValidSearchTerms return if ident is valid for a group
 func ValidSearchTerms(group string, ident string) bool {
 	switch group {
 	case "Organizations":
 		return organizations.ValidSearchTerms(ident)
 	case "Tickets":
+		return tickets.ValidSearchTerms(ident)
 	case "Users":
+		return users.ValidSearchTerms(ident)
 	default:
+		return false
 	}
-	return false
 }

@@ -79,3 +79,11 @@ func NoResultFound() {
 func noResultFound() string {
 	return "No results found"
 }
+
+// InvalidSearchTerm display invalid search term to user
+func InvalidSearchTerm() {
+	fmt.Println(invalidSearchTerm())
+}
+func invalidSearchTerm() string {
+	return "Invalid search term"
+}
