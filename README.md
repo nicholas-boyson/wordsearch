@@ -23,24 +23,22 @@ Supported search fields
 | suspended       |                 |                |
 | role            |                 |                |
 
-Search by user will display the users details plus the linked organizations details.
-Search by ticket will display the ticket information plus the linked organizations details.
-Search by organization will display the organization details plus list of linked users (subset of information) and a list of linked tickets (subset of information).
+## Assumptions
+Every field can be used in the search.
+When searching by user the application will display the users details plus the linked organizations details.
+When searching by ticket the application will display the ticket information plus the linked organizations details.
+When searching by organization the applications will display the organization details plus list of linked users (subset of information) and a list of linked tickets (subset of information).
+When a search returns multiple results and the search was not by organization id, the result will display a grid of those returned results.
+When a search returns multiple results and the search was by organization id, the result will display a grid of those returned results and the linked organization id.
 
-Approach Idea 1:
-- Search interface options to search or display list of search field options
-- on search the user is presented with Search on users, Search on tickets, or Search on Organizations
-- Read the file the user selected e.g. Users and search the file based on search input field and store the found information and pull out the organisation id.
-- Then read the file of the related information i.e. organisation
+## Usage
+```
+// running using go, requires installation of golang
+go run .
 
-Pros: code is simple to follow and maintain. 
-Cons: for each search will need to constantly read the files.
-
-Approach Idea 2:
-- Load each source file into slices of structs
-- Search interface options to search or display list of search field options
-- on search the user is presented with Search on users, Search on tickets, or Search on Organizations
-- Search on slice
+// running using exe if you have created the build for windows
+.\wordsearch.exe
+```
 
 ## Build for Windows (creates an exe)
 ```
