@@ -70,57 +70,46 @@ func SearchTickets(tickets []Ticket, ident string, value string) (ticketList []T
 		case "_id":
 			if ticket.Id == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		case "url":
 			if ticket.URL == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		case "external_id":
 			if ticket.ExternalId == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		case "created_at":
 			if ticket.CreatedAt == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		case "type":
 			if ticket.Type == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		case "subject":
 			if ticket.Subject == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		case "description":
 			if ticket.Description == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		case "priority":
 			if ticket.Priority == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		case "status":
 			if ticket.Status == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		case "submitter_id":
 			if strconv.Itoa(ticket.SubmitterId) == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		case "assignee_id":
 			if strconv.Itoa(ticket.AssigneeId) == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		case "organization_id":
 			if strconv.Itoa(ticket.OrganizationId) == value {
@@ -130,23 +119,19 @@ func SearchTickets(tickets []Ticket, ident string, value string) (ticketList []T
 			for _, tag := range ticket.Tags {
 				if tag == value {
 					ticketList = append(ticketList, ticket)
-					return
 				}
 			}
 		case "has_incidents":
 			if strconv.FormatBool(ticket.HasIncidents) == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		case "due_at":
 			if ticket.DueAt == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		case "via":
 			if ticket.Via == value {
 				ticketList = append(ticketList, ticket)
-				return
 			}
 		default:
 			return
