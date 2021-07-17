@@ -44,3 +44,14 @@ func SearchData(s Search) (result SearchResult) {
 	}
 	return
 }
+
+func ValidSearchTerms(group string, ident string) bool {
+	switch group {
+	case "Organizations":
+		return organizations.ValidSearchTerms(ident)
+	case "Tickets":
+	case "Users":
+	default:
+	}
+	return false
+}

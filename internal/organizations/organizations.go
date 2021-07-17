@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
+//Organization struct defining an organization
 type Organization struct {
 	Id            int      `json:"_id"`
 	URL           string   `json:"url"`
@@ -19,66 +21,16 @@ type Organization struct {
 	Tags          []string `json:"tags"`
 }
 
-func LoadOrganizationsMapField(ident string) (map[string]Organization, error) {
+const organizationsFilePath = "internal/source_data/organizations.json"
+
+// LoadOrganizations process to load the organizations datastore into a slice
+func LoadOrganizations(testFilePath string) ([]Organization, error) {
 	//open the files
-	var organizationsFilePtr *os.File
-	organizationsFilePtr, err := os.Open("../source_data/organizations.json")
+	absPath, err := filepath.Abs(organizationsFilePath)
 	if err != nil {
 		return nil, err
 	}
-	defer func() (err error) {
-		// ensure we close resource
-		if rErr := organizationsFilePtr.Close(); rErr != nil {
-			return rErr
-		}
-		return nil
-	}()
-
-	decoder := json.NewDecoder(organizationsFilePtr)
-	var organizations []Organization
-	err = decoder.Decode(&organizations)
-	if err != nil && err != io.EOF {
-		// return error when the JSON is invalid and not empty
-		return nil, err
-	}
-
-	var returnList = map[string]Organization{}
-	for _, org := range organizations {
-		switch ident {
-		case "_id":
-			returnList[strconv.Itoa(org.Id)] = org
-		case "url":
-			returnList[org.URL] = org
-		case "external_id":
-			returnList[org.ExternalId] = org
-		case "name":
-			returnList[org.Name] = org
-		case "domain_names":
-			for _, dn := range org.DomainNames {
-				returnList[dn] = org
-			}
-		case "created_at":
-			returnList[org.CreatedAt] = org
-		case "details":
-			returnList[org.Details] = org
-		case "shared_tickets":
-			returnList[strconv.FormatBool(org.SharedTickets)] = org
-		case "tags":
-			for _, tag := range org.Tags {
-				returnList[tag] = org
-			}
-		default:
-			returnList[strconv.Itoa(org.Id)] = org
-		}
-	}
-	return returnList, nil
-}
-
-const organizationsFilePath = "../source_data/organizations.json"
-
-func LoadOrganizations(testFilePath string) ([]Organization, error) {
-	//open the files
-	filePath := organizationsFilePath
+	filePath := absPath
 	if testFilePath != "" {
 		filePath = testFilePath
 	}
@@ -104,39 +56,7 @@ func LoadOrganizations(testFilePath string) ([]Organization, error) {
 	return organizations, nil
 }
 
-func OrganizationsMapField(organizations []Organization, ident string) map[string]Organization {
-	var returnList = map[string]Organization{}
-	for _, org := range organizations {
-		switch ident {
-		case "_id":
-			returnList[strconv.Itoa(org.Id)] = org
-		case "url":
-			returnList[org.URL] = org
-		case "external_id":
-			returnList[org.ExternalId] = org
-		case "name":
-			returnList[org.Name] = org
-		case "domain_names":
-			for _, dn := range org.DomainNames {
-				returnList[dn] = org
-			}
-		case "created_at":
-			returnList[org.CreatedAt] = org
-		case "details":
-			returnList[org.Details] = org
-		case "shared_tickets":
-			returnList[strconv.FormatBool(org.SharedTickets)] = org
-		case "tags":
-			for _, tag := range org.Tags {
-				returnList[tag] = org
-			}
-		default:
-			returnList[strconv.Itoa(org.Id)] = org
-		}
-	}
-	return returnList
-}
-
+//SearchOrganizations function to search over all organizations based on ident and value provided
 func SearchOrganizations(organizations []Organization, ident string, value string) Organization {
 	for _, org := range organizations {
 		switch ident {
@@ -185,4 +105,15 @@ func SearchOrganizations(organizations []Organization, ident string, value strin
 		}
 	}
 	return Organization{}
+}
+
+// ValidSearchTerms checks an ident against a list of valid options and returns true if it exists
+func ValidSearchTerms(ident string) bool {
+	validIdents := []string{"_id", "url", "external_id", "name", "domain_names", "created_at", "details", "shared_tickets", "tags"}
+	for _, v := range validIdents {
+		if v == ident {
+			return true
+		}
+	}
+	return false
 }

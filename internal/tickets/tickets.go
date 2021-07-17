@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
+// Ticket defines the ticket
 type Ticket struct {
 	Id             string   `json:"_id"`
 	URL            string   `json:"url"`
@@ -26,11 +28,16 @@ type Ticket struct {
 	Via            string   `json:"via"`
 }
 
-const ticketFilePath = "../source_data/tickets.json"
+const ticketFilePath = "internal/source_data/tickets.json"
 
+// LoadTickets process to load the tickets datastore into a slice
 func LoadTickets(testFilePath string) ([]Ticket, error) {
 	//open the files
-	filePath := ticketFilePath
+	absPath, err := filepath.Abs(ticketFilePath)
+	if err != nil {
+		return nil, err
+	}
+	filePath := absPath
 	if testFilePath != "" {
 		filePath = testFilePath
 	}
@@ -56,6 +63,7 @@ func LoadTickets(testFilePath string) ([]Ticket, error) {
 	return tickets, nil
 }
 
+//SearchTickets return slice of tickets that match provided ident and value
 func SearchTickets(tickets []Ticket, ident string, value string) (ticketList []Ticket) {
 	for _, ticket := range tickets {
 		switch ident {
@@ -145,4 +153,15 @@ func SearchTickets(tickets []Ticket, ident string, value string) (ticketList []T
 		}
 	}
 	return
+}
+
+// ValidSearchTerms checks an ident against a list of valid options and returns true if it exists
+func ValidSearchTerms(ident string) bool {
+	validIdents := []string{"_id", "url", "external_id", "created_at", "type", "subject", "description", "priority", "status", "submitter_id", "assignee_id", "organization_id", "tags", "has_incidents", "due_at", "via"}
+	for _, v := range validIdents {
+		if v == ident {
+			return true
+		}
+	}
+	return false
 }

@@ -49,5 +49,6 @@ go build .
 
 ## Running unit tests
 ```
+go test ./...
 go test -v ./...
 ```

@@ -1,0 +1,118 @@
+Running tool: C:\Program Files\Go\bin\go.exe test -benchmem -run=^$ -coverprofile=C:\Users\NICHOL~1\AppData\Local\Temp\vscode-gofh5AR9\go-code-cover -bench . github.com/nicholas-boyson/wordsearch/internal/organizations
+
+goos: windows
+goarch: amd64
+pkg: github.com/nicholas-boyson/wordsearch/internal/organizations
+cpu: Intel(R) Core(TM) i7-10700K CPU @ 3.80GHz
+BenchmarkOrganisationLoad-16              	    5932	    194945 ns/op	   56609 B/op	     488 allocs/op
+BenchmarkOrganisationLoadMapField-16      	    5992	    196032 ns/op	   60690 B/op	     535 allocs/op
+BenchmarkOrganisationLoadThenMap-16       	  311720	      3787 ns/op	    5427 B/op	      54 allocs/op
+BenchmarkOrganisationLoadThenSearch-16    	 1779856	       675.4 ns/op	      80 B/op	      25 allocs/op
+PASS
+coverage: 41.9% of statements
+ok  	github.com/nicholas-boyson/wordsearch/internal/organizations	5.719s
+
+func LoadOrganizationsMapField(ident string) (map[string]Organization, error) {
+	//open the files
+	var organizationsFilePtr *os.File
+	organizationsFilePtr, err := os.Open("../source_data/organizations.json")
+	if err != nil {
+		return nil, err
+	}
+	defer func() (err error) {
+		// ensure we close resource
+		if rErr := organizationsFilePtr.Close(); rErr != nil {
+			return rErr
+		}
+		return nil
+	}()
+
+	decoder := json.NewDecoder(organizationsFilePtr)
+	var organizations []Organization
+	err = decoder.Decode(&organizations)
+	if err != nil && err != io.EOF {
+		// return error when the JSON is invalid and not empty
+		return nil, err
+	}
+
+	var returnList = map[string]Organization{}
+	for _, org := range organizations {
+		switch ident {
+		case "_id":
+			returnList[strconv.Itoa(org.Id)] = org
+		case "url":
+			returnList[org.URL] = org
+		case "external_id":
+			returnList[org.ExternalId] = org
+		case "name":
+			returnList[org.Name] = org
+		case "domain_names":
+			for _, dn := range org.DomainNames {
+				returnList[dn] = org
+			}
+		case "created_at":
+			returnList[org.CreatedAt] = org
+		case "details":
+			returnList[org.Details] = org
+		case "shared_tickets":
+			returnList[strconv.FormatBool(org.SharedTickets)] = org
+		case "tags":
+			for _, tag := range org.Tags {
+				returnList[tag] = org
+			}
+		default:
+			returnList[strconv.Itoa(org.Id)] = org
+		}
+	}
+	return returnList, nil
+}
+
+func BenchmarkOrganisationLoadMapField(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		_, err := LoadOrganizationsMapField("_id")
+		assert.Nil(b, err)
+	}
+}
+BenchmarkOrganisationLoadMapField-16      	    5992	    196032 ns/op	   60690 B/op	     535 allocs/op
+
+func OrganizationsMapField(organizations []Organization, ident string) map[string]Organization {
+	var returnList = map[string]Organization{}
+	for _, org := range organizations {
+		switch ident {
+		case "_id":
+			returnList[strconv.Itoa(org.Id)] = org
+		case "url":
+			returnList[org.URL] = org
+		case "external_id":
+			returnList[org.ExternalId] = org
+		case "name":
+			returnList[org.Name] = org
+		case "domain_names":
+			for _, dn := range org.DomainNames {
+				returnList[dn] = org
+			}
+		case "created_at":
+			returnList[org.CreatedAt] = org
+		case "details":
+			returnList[org.Details] = org
+		case "shared_tickets":
+			returnList[strconv.FormatBool(org.SharedTickets)] = org
+		case "tags":
+			for _, tag := range org.Tags {
+				returnList[tag] = org
+			}
+		default:
+			returnList[strconv.Itoa(org.Id)] = org
+		}
+	}
+	return returnList
+}
+
+func BenchmarkOrganisationLoadThenMap(b *testing.B) {
+	orgs, err := LoadOrganizations("../source_data/organizations.json")
+	assert.Nil(b, err)
+	for i := 0; i < b.N; i++ {
+		_ = OrganizationsMapField(orgs, "_id")
+	}
+}
+BenchmarkOrganisationLoadThenMap-16       	  311720	      3787 ns/op	    5427 B/op	      54 allocs/op

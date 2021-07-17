@@ -8,7 +8,7 @@ import (
 )
 
 func TestOrganizationsPath(t *testing.T) {
-	assert.Equal(t, "../source_data/organizations.json", organizationsFilePath)
+	assert.Equal(t, "internal/source_data/organizations.json", organizationsFilePath)
 }
 
 func TestLoadOrganizations(t *testing.T) {
@@ -71,30 +71,40 @@ func TestLoadOrganizations(t *testing.T) {
 	}
 }
 
+func TestValidSearchTerms(t *testing.T) {
+	tests := []struct {
+		test       string
+		searchTerm string
+		result     bool
+	}{
+		{
+			test:       "ValidTerm",
+			searchTerm: "_id",
+			result:     true,
+		},
+		{
+			test:       "InvalidTerm",
+			searchTerm: "InvalidTerm",
+			result:     false,
+		},
+	}
+
+	for _, tt := range tests {
+		result := ValidSearchTerms(tt.searchTerm)
+		assert.IsType(t, tt.result, result)
+		assert.Equal(t, tt.result, result)
+	}
+}
+
 func BenchmarkOrganisationLoad(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, err := LoadOrganizations("")
+		_, err := LoadOrganizations("../source_data/organizations.json")
 		assert.Nil(b, err)
-	}
-}
-
-func BenchmarkOrganisationLoadMapField(b *testing.B) {
-	for i := 0; i < b.N; i++ {
-		_, err := LoadOrganizationsMapField("_id")
-		assert.Nil(b, err)
-	}
-}
-
-func BenchmarkOrganisationLoadThenMap(b *testing.B) {
-	orgs, err := LoadOrganizations("")
-	assert.Nil(b, err)
-	for i := 0; i < b.N; i++ {
-		_ = OrganizationsMapField(orgs, "_id")
 	}
 }
 
 func BenchmarkOrganisationLoadThenSearch(b *testing.B) {
-	orgs, err := LoadOrganizations("")
+	orgs, err := LoadOrganizations("../source_data/organizations.json")
 	assert.Nil(b, err)
 	for i := 0; i < b.N; i++ {
 		_ = SearchOrganizations(orgs, "_id", "125")

@@ -4,9 +4,11 @@ import (
 	"encoding/json"
 	"io"
 	"os"
+	"path/filepath"
 	"strconv"
 )
 
+//User defines the user
 type User struct {
 	Id             int      `json:"_id"`
 	URL            string   `json:"url"`
@@ -29,11 +31,16 @@ type User struct {
 	Role           string   `json:"role"`
 }
 
-const usersFilePath = "../source_data/users.json"
+const usersFilePath = "internal/source_data/users.json"
 
+// LoadUsers process to load the users datastore into a slice
 func LoadUsers(testFilePath string) ([]User, error) {
 	//open the files
-	filePath := usersFilePath
+	absPath, err := filepath.Abs(usersFilePath)
+	if err != nil {
+		return nil, err
+	}
+	filePath := absPath
 	if testFilePath != "" {
 		filePath = testFilePath
 	}
@@ -59,6 +66,7 @@ func LoadUsers(testFilePath string) ([]User, error) {
 	return users, nil
 }
 
+//SearchUsers return slice of users that match provided ident and value
 func SearchUsers(users []User, ident string, value string) (userList []User) {
 	for _, user := range users {
 		switch ident {
@@ -163,4 +171,15 @@ func SearchUsers(users []User, ident string, value string) (userList []User) {
 		}
 	}
 	return
+}
+
+// ValidSearchTerms checks an ident against a list of valid options and returns true if it exists
+func ValidSearchTerms(ident string) bool {
+	validIdents := []string{"_id", "url", "external_id", "name", "alias", "created_at", "active", "verified", "shared", "locale", "timezone", "last_login_at", "email", "phone", "signature", "organization_id", "tags", "suspended", "role"}
+	for _, v := range validIdents {
+		if v == ident {
+			return true
+		}
+	}
+	return false
 }

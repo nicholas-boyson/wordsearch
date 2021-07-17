@@ -8,7 +8,7 @@ import (
 )
 
 func TestTicketsPath(t *testing.T) {
-	assert.Equal(t, "../source_data/tickets.json", ticketFilePath)
+	assert.Equal(t, "internal/source_data/tickets.json", ticketFilePath)
 }
 
 func TestLoadTickets(t *testing.T) {
@@ -82,6 +82,31 @@ func TestLoadTickets(t *testing.T) {
 			}
 			assert.Equal(t, tt.tickets, tickets)
 		})
+	}
+}
+
+func TestValidSearchTerms(t *testing.T) {
+	tests := []struct {
+		test       string
+		searchTerm string
+		result     bool
+	}{
+		{
+			test:       "ValidTerm",
+			searchTerm: "_id",
+			result:     true,
+		},
+		{
+			test:       "InvalidTerm",
+			searchTerm: "InvalidTerm",
+			result:     false,
+		},
+	}
+
+	for _, tt := range tests {
+		result := ValidSearchTerms(tt.searchTerm)
+		assert.IsType(t, tt.result, result)
+		assert.Equal(t, tt.result, result)
 	}
 }
 

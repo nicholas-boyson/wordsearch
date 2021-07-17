@@ -8,7 +8,7 @@ import (
 )
 
 func TestUsersPath(t *testing.T) {
-	assert.Equal(t, "../source_data/users.json", usersFilePath)
+	assert.Equal(t, "internal/source_data/users.json", usersFilePath)
 }
 
 func TestLoadUsers(t *testing.T) {
@@ -91,15 +91,40 @@ func TestLoadUsers(t *testing.T) {
 	}
 }
 
+func TestValidSearchTerms(t *testing.T) {
+	tests := []struct {
+		test       string
+		searchTerm string
+		result     bool
+	}{
+		{
+			test:       "ValidTerm",
+			searchTerm: "_id",
+			result:     true,
+		},
+		{
+			test:       "InvalidTerm",
+			searchTerm: "InvalidTerm",
+			result:     false,
+		},
+	}
+
+	for _, tt := range tests {
+		result := ValidSearchTerms(tt.searchTerm)
+		assert.IsType(t, tt.result, result)
+		assert.Equal(t, tt.result, result)
+	}
+}
+
 func BenchmarkUsersLoad(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		_, err := LoadUsers("")
+		_, err := LoadUsers("../source_data/users.json")
 		assert.Nil(b, err)
 	}
 }
 
 func BenchmarkUsersLoadThenSearch(b *testing.B) {
-	users, err := LoadUsers("")
+	users, err := LoadUsers("../source_data/users.json")
 	assert.Nil(b, err)
 	for i := 0; i < b.N; i++ {
 		_ = SearchUsers(users, "organization_id", "125")
