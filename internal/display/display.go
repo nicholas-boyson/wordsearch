@@ -2,6 +2,7 @@ package display
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/nicholas-boyson/wordsearch/internal/organizations"
 	"github.com/nicholas-boyson/wordsearch/internal/tickets"
@@ -107,10 +108,35 @@ func DisplayOrganizations(orgList []organizations.Organization, ticketList []tic
 	}
 }
 func displayOrganizationList(orgList []organizations.Organization) string {
-	return ""
+	result := "Multipe organizations found\n"
+	result = result + fmt.Sprintf("%-20s|%-20s|%-100s\n", "Organization Id", "Organization Name", "Organization URL")
+	result = result + fmt.Sprintf("%-20s|%-20s|%-100s\n", strings.Repeat("-", 20), strings.Repeat("-", 20), strings.Repeat("-", 100))
+	for _, org := range orgList {
+		result = result + fmt.Sprintf("%-20d|%-20s|%-100s\n", org.Id, org.Name, org.URL)
+	}
+	return result
 }
 func displayOrganizationDetails(org organizations.Organization, ticketList []tickets.Ticket, userList []users.User) string {
-	return ""
+	result := fmt.Sprintf("Organization %s (Id %d)\n", org.Name, org.Id)
+	result = result + "Details:\n"
+	result = result + fmt.Sprintf("%-16s%s\n", "URL:", org.URL)
+	result = result + fmt.Sprintf("%-16s%s\n", "External Id:", org.ExternalId)
+	result = result + fmt.Sprintf("%-16s%s\n", "Created At:", org.CreatedAt)
+	result = result + fmt.Sprintf("%-16s%v\n", "Shared Tickets:", org.SharedTickets)
+	result = result + fmt.Sprintf("%-16s%s\n", "Details:", org.Details)
+	for i, dm := range org.DomainNames {
+		result = result + fmt.Sprintf("Domain Name %d: %s\n", i+1, dm)
+	}
+	for i, tag := range org.Tags {
+		result = result + fmt.Sprintf("Tag %d: %s\n", i+1, tag)
+	}
+	for i, user := range userList {
+		result = result + fmt.Sprintf("User %d: User Id: %-4d | User Name: %-30s | User Phone: %-15s | User Email: %-20s\n", i+1, user.Id, user.Name, user.Phone, user.Email)
+	}
+	for i, ticket := range ticketList {
+		result = result + fmt.Sprintf("Ticket %d: Ticket Id: %s | Ticket Subject %s\n", i+1, ticket.Id, ticket.Subject)
+	}
+	return result
 }
 
 // DisplayTickets generate tickets search result display
@@ -126,10 +152,41 @@ func DisplayTickets(ticketList []tickets.Ticket, org organizations.Organization)
 	}
 }
 func displayTicketsList(ticketList []tickets.Ticket, org organizations.Organization) string {
-	return ""
+	result := "Multipe tickets found\n"
+	result = result + fmt.Sprintf("%-50s|%-25s|%-100s\n", "Ticket Id", "Ticket subject", "Ticket Description")
+	result = result + fmt.Sprintf("%-50s|%-25s|%-100s\n", strings.Repeat("-", 50), strings.Repeat("-", 25), strings.Repeat("-", 100))
+	for _, ticket := range ticketList {
+		result = result + fmt.Sprintf("%-50s|%-25s|%-100s\n", ticket.Id, ticket.Subject, ticket.Description)
+	}
+	result = result + fmt.Sprintf("%-50s|%-25s|%-100s\n", strings.Repeat("-", 50), strings.Repeat("-", 25), strings.Repeat("-", 100))
+	if org.Id != 0 {
+		result = result + displayOrganizationDetails(org, nil, nil)
+	}
+	return result
 }
 func displayTicketDetails(ticket tickets.Ticket, org organizations.Organization) string {
-	return ""
+	result := fmt.Sprintf("Ticket %s (Id %s)\n", ticket.Subject, ticket.Id)
+	result = result + "Details:\n"
+	result = result + fmt.Sprintf("%-16s%s\n", "Description:", ticket.Description)
+	result = result + fmt.Sprintf("%-16s%s\n", "URL:", ticket.URL)
+	result = result + fmt.Sprintf("%-16s%s\n", "External Id:", ticket.ExternalId)
+	result = result + fmt.Sprintf("%-16s%s\n", "Created At:", ticket.CreatedAt)
+	result = result + fmt.Sprintf("%-16s%v\n", "Organization Id:", ticket.OrganizationId)
+	result = result + fmt.Sprintf("%-16s%s\n", "Via:", ticket.Via)
+	result = result + fmt.Sprintf("%-16s%s\n", "Type:", ticket.Type)
+	result = result + fmt.Sprintf("%-16s%s\n", "Priority:", ticket.Priority)
+	result = result + fmt.Sprintf("%-16s%s\n", "Status:", ticket.Status)
+	result = result + fmt.Sprintf("%-16s%d\n", "Submitter Id:", ticket.SubmitterId)
+	result = result + fmt.Sprintf("%-16s%d\n", "Assignee Id:", ticket.AssigneeId)
+	result = result + fmt.Sprintf("%-16s%v\n", "Has Incidents:", ticket.HasIncidents)
+	result = result + fmt.Sprintf("%-16s%s\n", "Due At:", ticket.DueAt)
+	for i, tag := range ticket.Tags {
+		result = result + fmt.Sprintf("Tag %d: %s\n", i+1, tag)
+	}
+	if org.Id != 0 {
+		result = result + displayOrganizationDetails(org, nil, nil)
+	}
+	return result
 }
 
 // DisplayUsers generate users search result display
@@ -145,8 +202,42 @@ func DisplayUsers(userList []users.User, org organizations.Organization) {
 	}
 }
 func displayUsersList(userList []users.User, org organizations.Organization) string {
-	return ""
+	result := "Multipe users found\n"
+	result = result + fmt.Sprintf("%-20s|%-20s|%-20s\n", "User Id", "User Name", "User Active")
+	result = result + fmt.Sprintf("%-20s|%-20s|%-20s\n", strings.Repeat("-", 20), strings.Repeat("-", 20), strings.Repeat("-", 20))
+	for _, user := range userList {
+		result = result + fmt.Sprintf("%-20d|%-20s|%-20v\n", user.Id, user.Name, user.Active)
+	}
+	result = result + fmt.Sprintf("%-20s|%-20s|%-20s\n", strings.Repeat("-", 20), strings.Repeat("-", 20), strings.Repeat("-", 20))
+	if org.Id != 0 {
+		result = result + displayOrganizationDetails(org, nil, nil)
+	}
+	return result
 }
 func displayUserDetails(user users.User, org organizations.Organization) string {
-	return ""
+	result := fmt.Sprintf("User %s (Alias %s) (Id %d)\n", user.Name, user.Alias, user.Id)
+	result = result + "Details:\n"
+	result = result + fmt.Sprintf("%-16s%s\n", "URL:", user.URL)
+	result = result + fmt.Sprintf("%-16s%s\n", "External Id:", user.ExternalId)
+	result = result + fmt.Sprintf("%-16s%s\n", "Email:", user.Email)
+	result = result + fmt.Sprintf("%-16s%s\n", "Phone:", user.Phone)
+	result = result + fmt.Sprintf("%-16s%s\n", "Signature:", user.Signature)
+	result = result + fmt.Sprintf("%-16s%s\n", "Created At:", user.CreatedAt)
+	result = result + fmt.Sprintf("%-16s%d\n", "Organization Id:", user.OrganizationId)
+	result = result + fmt.Sprintf("%-16s%v\n", "Active:", user.Active)
+	result = result + fmt.Sprintf("%-16s%s\n", "Role:", user.Role)
+	result = result + fmt.Sprintf("%-16s%v\n", "Verified:", user.Verified)
+	result = result + fmt.Sprintf("%-16s%v\n", "Shared:", user.Shared)
+	result = result + fmt.Sprintf("%-16s%s\n", "Local:", user.Locale)
+	result = result + fmt.Sprintf("%-16s%s\n", "Timezone:", user.Timezone)
+	result = result + fmt.Sprintf("%-16s%s\n", "Last Login At:", user.LastLoginAt)
+	result = result + fmt.Sprintf("%-16s%v\n", "Suspended:", user.Suspended)
+
+	for i, tag := range user.Tags {
+		result = result + fmt.Sprintf("Tag %d: %s\n", i+1, tag)
+	}
+	if org.Id != 0 {
+		result = result + displayOrganizationDetails(org, nil, nil)
+	}
+	return result
 }
