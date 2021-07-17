@@ -5,13 +5,25 @@ Approach Idea 1:
 - Then read the file of the related information i.e. organisation
 
 Pros: code is simple to follow and maintain. 
-Cons: for each search will need to constantly read the files.
+Cons: for each search will need to constantly read the files which is expensive and will not scale well
 
 Approach Idea 2:
 - Load each source file into slices of structs
 - Search interface options to search or display list of search field options
 - on search the user is presented with Search on users, Search on tickets, or Search on Organizations
-- Search on slice
+- create map on search ident value
+- search based on map
+
+Cons: code is more complex, would need to handle mapping when there are duplicate results on that field. Also on experiment (see below) it is expensive to convert on each search
+
+Approach Idea 3: (what I implemented)
+- Load each source file into slices of structs
+- Search interface options to search or display list of search field options
+- on search the user is presented with Search on users, Search on tickets, or Search on Organizations
+- Search on slice for group then on the linked groups
+
+Pros: code is simple and easy to maintain and expand on, more efficient than the other options
+Cons: have to search seperately over each slice group, but based on the benchmarking the return time is not noticiable
 
 Running tool: C:\Program Files\Go\bin\go.exe test -benchmem -run=^$ -coverprofile=C:\Users\NICHOL~1\AppData\Local\Temp\vscode-gofh5AR9\go-code-cover -bench . github.com/nicholas-boyson/wordsearch/internal/organizations
 
