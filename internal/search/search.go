@@ -68,6 +68,7 @@ func ValidSearchTerms(group string, ident string) bool {
 	}
 }
 
+// SearchResultDisplay determines the display based on group and search results
 func SearchResultDisplay(group string, sr SearchResult) {
 	switch group {
 	case "Organizations":
