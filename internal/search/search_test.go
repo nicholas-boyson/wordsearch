@@ -1,7 +1,6 @@
 package search
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/nicholas-boyson/wordsearch/internal/organizations"
@@ -2538,11 +2537,11 @@ func TestDisplaySearchResults(t *testing.T) {
 }
 
 func BenchmarkOrganizationsSearch(b *testing.B) {
-	orgs, err := organizations.LoadOrganizations("")
+	orgs, err := organizations.LoadOrganizations("../source_data/organizations.json")
 	assert.Nil(b, err)
-	tickets, err := tickets.LoadTickets("")
+	tickets, err := tickets.LoadTickets("../source_data/tickets.json")
 	assert.Nil(b, err)
-	users, err := users.LoadUsers("")
+	users, err := users.LoadUsers("../source_data/users.json")
 	assert.Nil(b, err)
 	searchRequest := Search{
 		Group:         "Organizations",
@@ -2553,19 +2552,17 @@ func BenchmarkOrganizationsSearch(b *testing.B) {
 		Users:         users,
 	}
 
-	var searchResult = SearchResult{}
 	for i := 0; i < b.N; i++ {
-		searchResult = SearchData(searchRequest)
+		_ = SearchData(searchRequest)
 	}
-	fmt.Println(searchResult)
 }
 
 func BenchmarkTicketsSearch(b *testing.B) {
-	orgs, err := organizations.LoadOrganizations("")
+	orgs, err := organizations.LoadOrganizations("../source_data/organizations.json")
 	assert.Nil(b, err)
-	tickets, err := tickets.LoadTickets("")
+	tickets, err := tickets.LoadTickets("../source_data/tickets.json")
 	assert.Nil(b, err)
-	users, err := users.LoadUsers("")
+	users, err := users.LoadUsers("../source_data/users.json")
 	assert.Nil(b, err)
 	searchRequest := Search{
 		Group:         "Tickets",
@@ -2576,19 +2573,17 @@ func BenchmarkTicketsSearch(b *testing.B) {
 		Users:         users,
 	}
 
-	var searchResult = SearchResult{}
 	for i := 0; i < b.N; i++ {
-		searchResult = SearchData(searchRequest)
+		_ = SearchData(searchRequest)
 	}
-	fmt.Println(searchResult)
 }
 
 func BenchmarkUsersSearch(b *testing.B) {
-	orgs, err := organizations.LoadOrganizations("")
+	orgs, err := organizations.LoadOrganizations("../source_data/organizations.json")
 	assert.Nil(b, err)
-	tickets, err := tickets.LoadTickets("")
+	tickets, err := tickets.LoadTickets("../source_data/tickets.json")
 	assert.Nil(b, err)
-	users, err := users.LoadUsers("")
+	users, err := users.LoadUsers("../source_data/users.json")
 	assert.Nil(b, err)
 	searchRequest := Search{
 		Group:         "Users",
@@ -2599,9 +2594,7 @@ func BenchmarkUsersSearch(b *testing.B) {
 		Users:         users,
 	}
 
-	var searchResult = SearchResult{}
 	for i := 0; i < b.N; i++ {
-		searchResult = SearchData(searchRequest)
+		_ = SearchData(searchRequest)
 	}
-	fmt.Println(searchResult)
 }

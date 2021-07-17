@@ -116,3 +116,18 @@ func BenchmarkOrganisationLoadThenMap(b *testing.B) {
 	}
 }
 BenchmarkOrganisationLoadThenMap-16       	  311720	      3787 ns/op	    5427 B/op	      54 allocs/op
+
+
+Benchmark results for searching across the different groups
+Running tool: C:\Program Files\Go\bin\go.exe test -benchmem -run=^$ -coverprofile=C:\Users\NICHOL~1\AppData\Local\Temp\vscode-gofh5AR9\go-code-cover -bench . github.com/nicholas-boyson/wordsearch/internal/search
+
+goos: windows
+goarch: amd64
+pkg: github.com/nicholas-boyson/wordsearch/internal/search
+cpu: Intel(R) Core(TM) i7-10700K CPU @ 3.80GHz
+BenchmarkOrganizationsSearch-16    	  111027	     10421 ns/op	    5657 B/op	     302 allocs/op
+BenchmarkTicketsSearch-16          	  149509	      7845 ns/op	    4653 B/op	     227 allocs/op
+BenchmarkUsersSearch-16            	  342990	      3366 ns/op	    1228 B/op	     101 allocs/op
+PASS
+coverage: 44.4% of statements
+ok  	github.com/nicholas-boyson/wordsearch/internal/search	3.963s
